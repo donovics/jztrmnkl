@@ -4,6 +4,7 @@ import org.jztrmnkl.database.DatabaseManager;
 import org.jztrmnkl.entities.Book;
 import org.jztrmnkl.entities.Borrower;
 import org.jztrmnkl.entities.Borrowing;
+import org.jztrmnkl.repository.BookContainer;
 import org.jztrmnkl.repository.LibraryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,12 @@ public class LibraryService {
         }
     }
 
-    public List<Book> getBooks(){
-        return libraryRepository.getBooks();
+    public BookContainer getBooks(){
+        return libraryRepository.getBookContainer();
     }
 
     public void addBook(Book book){
-        if (!libraryRepository.getBooks().contains(book)){
+        if (!(libraryRepository.getBookContainer().getBooks().contains(book))){
             libraryRepository.addBook(book);
             DatabaseManager.insertBook(book);
         }
@@ -49,7 +50,7 @@ public class LibraryService {
 
     public void addBorrowing(Borrowing borrowing){
         boolean alreadyPresent = false;
-        for (Borrowing b : libraryRepository.getBorrowings()){
+        for (Borrowing b : libraryRepository.getBorrowingContainer().getBorrowings()){
             if (b.getBookId() == borrowing.getBookId()){
                 alreadyPresent = true;
             }
@@ -62,37 +63,37 @@ public class LibraryService {
     }
 
     public List<Borrowing> getBorrowings(){
-        return libraryRepository.getBorrowings();
+        return libraryRepository.getBorrowingContainer().getBorrowings();
     }
 
     public void addBorrower(Borrower borrower){
-        if (!libraryRepository.getBorrowers().contains(borrower)){
+        if (!(libraryRepository.getBorrowerContainer().getBorrowers().contains(borrower))){
             libraryRepository.addBorrower(borrower);
             DatabaseManager.insertBorrower(borrower);
         }
     }
 
-    public Borrower getBorrower(int id, String name){
-        Borrower borrower = null;
-        for (Borrower b : libraryRepository.getBorrowers()){
-            if (b.getId() == id && b.getName().equals(name)){
-                borrower = b;
+    public Borrower getBorrower(Borrower borrower){
+        Borrower foundBorrower = null;
+        for (Borrower b : libraryRepository.getBorrowerContainer().getBorrowers()){
+            if (b.getId() == borrower.getId()){
+                foundBorrower = b;
             }
         }
-        return borrower;
+        return foundBorrower;
     }
 
-    public List<Book> getBorrowedBooks(int id, String name){
+    public List<Book> getBorrowedBooks(Borrower borrower){
         List<Integer> borrowedBookIds = new ArrayList<>();
-        for (Borrowing b : libraryRepository.getBorrowings()){
-            if (b.getBorrowerId() == id) {
+        for (Borrowing b : libraryRepository.getBorrowingContainer().getBorrowings()){
+            if (b.getBorrowerId() == borrower.getId()) {
                 borrowedBookIds.add(b.getBookId());
             }
         }
 
         List<Book> borrowedBooks = new ArrayList<>();
         int index = 0;
-        for (Book b : libraryRepository.getBooks()){
+        for (Book b : libraryRepository.getBookContainer().getBooks()){
             if (index < borrowedBookIds.size()){
                 if (b.getId() == borrowedBookIds.get(index)) {
                     borrowedBooks.add(b);

@@ -3,22 +3,22 @@ package org.jztrmnkl.Controller;
 import org.jztrmnkl.entities.Book;
 import org.jztrmnkl.entities.Borrower;
 import org.jztrmnkl.entities.Borrowing;
+import org.jztrmnkl.repository.BookContainer;
 import org.jztrmnkl.service.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RestController("/Library")
+@RestController
+@RequestMapping("/Library")
 public class LibraryController {
     @Autowired
     LibraryService libraryService;
 
     @GetMapping("/Books")
-    public List<Book> getBooks(){
+    public BookContainer getBooks(){
         return libraryService.getBooks();
     }
 
@@ -38,13 +38,28 @@ public class LibraryController {
     }
 
     @GetMapping("/Borrower")
-    public Borrower getBorrower(int id, String name){
-        return libraryService.getBorrower(id, name);
+    public String getBorrower(@RequestBody Borrower borrower){
+        Borrower foundBorrower = libraryService.getBorrower(borrower);
+        String returnString = "Theres no identical entry in the database";
+        if (foundBorrower != null) {
+            returnString = "id: " + foundBorrower.getId() + "\nname: " + foundBorrower.getName() + "\nage: " + foundBorrower.getAge();
+        }
+
+        return returnString;
     }
 
     @GetMapping("/Borrowing")
-    public List<Book> getBorrowedBooks(int id, String name){
-        return libraryService.getBorrowedBooks(id, name);
+    public String getBorrowedBooks(@RequestBody Borrower borrower){
+        List<Book> foundBooks = libraryService.getBorrowedBooks(borrower);
+
+        String returnString = "Theres no books borrowed by the person";
+        if (!foundBooks.isEmpty()) {
+            returnString = foundBooks.stream()
+                    .map(Book::getName)
+                    .collect(Collectors.joining(", "));
+        }
+
+        return returnString;
     }
 
 }

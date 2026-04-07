@@ -18,12 +18,12 @@ public class DatabaseManager {
                 ");";
         String sqlCreateBorrowerTable = "CREATE TABLE IF NOT EXISTS borrowerTable (\n" +
                 "id INTEGER PRIMARY KEY,\n" +
-                "name TEXT\n" +
+                "name TEXT,\n" +
                 "age INTEGER\n" +
                 ");";
         String sqlCreateBorrowingTable = "CREATE TABLE IF NOT EXISTS borrowingTable (\n" +
-                "bookId INTEGER\n" +
-                "borrowerId INTEGER,\n" +
+                "bookId INTEGER,\n" +
+                "borrowerId INTEGER\n" +
                 ");";
 
 
@@ -31,6 +31,7 @@ public class DatabaseManager {
             Statement stmt = con.createStatement();
             stmt.execute(sqlCreateBookTable);
             stmt.execute(sqlCreateBorrowerTable);
+            stmt.execute(sqlCreateBorrowingTable);
         }
         catch (SQLException e){
             System.out.println(e.getMessage());
@@ -67,7 +68,7 @@ public class DatabaseManager {
     }
 
     public static void insertBorrowing(Borrowing borrowing){
-        String sqlInsert = "INSERT INTO borrowingTable(bookID, borrowerID) values(?, ?)";
+        String sqlInsert = "INSERT INTO borrowingTable(bookId, borrowerId) values(?, ?)";
 
         try(Connection con = DriverManager.getConnection(url)){
             PreparedStatement pstmt = con.prepareStatement(sqlInsert);
@@ -100,7 +101,7 @@ public class DatabaseManager {
     }
 
     public static List<Borrower> selectBorrowers(){
-        String sqlSelect = "SELECT id, name FROM borrowerTable";
+        String sqlSelect = "SELECT id, name, age FROM borrowerTable";
         List<Borrower> result = new ArrayList<>();
 
         try (Connection con = DriverManager.getConnection(url);
@@ -119,7 +120,7 @@ public class DatabaseManager {
     }
 
     public static List<Borrowing> selectBorrowings(){
-        String sqlSelect = "SELECT id, name FROM bookTable";
+        String sqlSelect = "SELECT bookId, borrowerId FROM borrowingTable";
         List<Borrowing> result = new ArrayList<>();
 
         try (Connection con = DriverManager.getConnection(url);

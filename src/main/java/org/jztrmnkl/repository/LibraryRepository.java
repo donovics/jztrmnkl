@@ -5,32 +5,26 @@ import org.jztrmnkl.entities.Borrower;
 import org.jztrmnkl.entities.Borrowing;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class LibraryRepository {
-    private List<Book> books;
-    private List<Borrower> borrowers;
-    private List<Borrowing> borrowings;
 
-    public LibraryRepository(){
-        books = new ArrayList<>();
-        borrowers = new ArrayList<>();
-        borrowings = new ArrayList<>();
-    }
+    private static BookContainer bookContainer = new BookContainer();
+    private static BorrowerContainer borrowerContainer = new BorrowerContainer();
+    private static BorrowingContainer borrowingContainer = new BorrowingContainer();
 
-    public List<Book> getBooks() {return books;}
-    public List<Borrower> getBorrowers() {return borrowers;}
-    public List<Borrowing> getBorrowings() {return borrowings;}
+    public BookContainer getBookContainer() {return bookContainer;}
+    public BorrowerContainer getBorrowerContainer() {return borrowerContainer;}
+    public BorrowingContainer getBorrowingContainer() {return borrowingContainer;}
 
     public void addBook(Book book){
-        books.add(book);
+        bookContainer.getBooks().add(book);
     }
     public void addBorrower(Borrower borrower){
-        borrowers.add(borrower);
+        borrowerContainer.getBorrowers().add(borrower);
     }
     public void addBorrowing(Borrowing borrowing){
-        borrowings.add(borrowing);
+        borrowingContainer.getBorrowings().add(borrowing);
     }
 }
