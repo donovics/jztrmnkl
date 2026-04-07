@@ -52,7 +52,7 @@ public class LibraryController {
     public String getBorrowedBooks(@RequestBody Borrower borrower){
         List<Book> foundBooks = libraryService.getBorrowedBooks(borrower);
 
-        String returnString = "Theres no books borrowed by the person";
+        String returnString = "Theres no books borrowed by the person.";
         if (!foundBooks.isEmpty()) {
             returnString = foundBooks.stream()
                     .map(Book::getName)
