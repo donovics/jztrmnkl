@@ -19,32 +19,32 @@ public class LibraryController {
 
     @GetMapping("/Books")
     public List<Book> getBooks(){
-
+        return libraryService.getBooks();
     }
 
     @PostMapping("/Books")
     public void postBook(@RequestBody Book book){
-
+        libraryService.addBook(book);
     }
 
     @PostMapping("/Borrowing")
     public void postBorrowing(@RequestBody Borrowing borrowing){
-
+        libraryService.addBorrowing(borrowing);
     }
 
     @PostMapping("/Borrower")
     public void postBorrower(@RequestBody Borrower borrower){
-
+        libraryService.addBorrower(borrower);
     }
 
     @GetMapping("/Borrower")
-    public Borrower getBorrower(){
-
+    public Borrower getBorrower(int id, String name){
+        return libraryService.getBorrower(id, name);
     }
 
     @GetMapping("/Borrowing")
-    public List<Book> getBorrowing(){
-
+    public List<Book> getBorrowedBooks(int id, String name){
+        return libraryService.getBorrowedBooks(id, name);
     }
 
 }
