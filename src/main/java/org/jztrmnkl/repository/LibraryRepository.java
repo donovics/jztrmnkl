@@ -5,8 +5,6 @@ import org.jztrmnkl.entities.Borrower;
 import org.jztrmnkl.entities.Borrowing;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class LibraryRepository {
 

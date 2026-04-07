@@ -2,7 +2,6 @@ package org.jztrmnkl.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.jztrmnkl.entities.Book;
 import org.jztrmnkl.entities.Borrower;
@@ -19,20 +18,19 @@ import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 public class LibraryServiceTest {
     private LibraryService libraryService = new LibraryService();
 
-    LibraryRepository libraryRepositoryMock = Mockito.mock(LibraryRepository.class);
-    BookContainer bookContainerMock = Mockito.mock(BookContainer.class);
-    BorrowingContainer borrowingContainerMock = Mockito.mock(BorrowingContainer.class);
+    static LibraryRepository libraryRepositoryMock = Mockito.mock(LibraryRepository.class);
+    static BookContainer bookContainerMock = Mockito.mock(BookContainer.class);
+    static BorrowingContainer borrowingContainerMock = Mockito.mock(BorrowingContainer.class);
 
-    List<Book> booksList = new ArrayList<>();
-    List<Borrowing> borrowingList = new ArrayList<>();
+    static List<Book> booksList = new ArrayList<>();
+    static List<Borrowing> borrowingList = new ArrayList<>();
 
-    @BeforeEach
-    public void setup(){
+    @BeforeAll
+    public static void setUp(){
 
         booksList.add(new Book(1, "Kék"));
         booksList.add(new Book(2, "Zöld"));
@@ -48,11 +46,13 @@ public class LibraryServiceTest {
         when(libraryRepositoryMock.getBorrowingContainer()).thenReturn(borrowingContainerMock);
         when(borrowingContainerMock.getBorrowings()).thenReturn(borrowingList);
 
-        ReflectionTestUtils.setField(libraryService,"libraryRepository",libraryRepositoryMock);
     }
 
     @Test
     public void getBorrowedBooksTest(){
+        ReflectionTestUtils.setField(libraryService,"libraryRepository",libraryRepositoryMock);
+
+
         List<Book> expected = new ArrayList<>();
         expected.add(new Book(1, "Kék"));
         expected.add(new Book(3, "Piros"));

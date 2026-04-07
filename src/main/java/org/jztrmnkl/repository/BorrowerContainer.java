@@ -13,7 +13,4 @@ public class BorrowerContainer {
     }
 
     public List<Borrower> getBorrowers() {return borrowers;}
-    public void addBorrower(Borrower borrower){
-        borrowers.add(borrower);
-    }
 }
